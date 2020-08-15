@@ -4,7 +4,7 @@ library(reshape2)
 library(ggplot2)
 library(data.table)
 
-setwd("E:\\NSYSU\\²{§ë")
+setwd("E:\\NSYSU\\ç¾æŠ•")
 stockData <- fread("10_stock.txt", sep = "\t")
 colnames(stockData) <- c("code", "name", "date", "open", "high", "low", "close", "volume")
 
@@ -14,19 +14,19 @@ retData <- stockData %>%
   na.omit() %>% 
   dcast(., formula = date ~ code, value.var = "dayLogRet")
 
-# ²Ä¤@ÃD
-# µL­·ÀI§Q²v1.04%
+# ç¬¬ä¸€é¡Œ
+# ç„¡é¢¨éšªåˆ©ç‡1.04%
 rf <- 0.0104
 ret_2016_2017 <- retData %>% filter(date >= 20161012, date <= 20171011)
 ret_2017_2018 <- retData %>% filter(date >= 20171012, date <= 20181011)
 
-# 2016~2017¦~¤Æ·¸¹S & ¦~¤ÆÅÜ²§¼Æ
+# 2016~2017å¹´åŒ–æº¢é…¬ & å¹´åŒ–è®Šç•°æ•¸
 apply(ret_2016_2017[, 2:11], 2, mean)*250 - rf
 apply(ret_2016_2017[, 2:11], 2, var)*250
-# 2017~2018¦~¤Æ·¸¹S & ¦~¤ÆÅÜ²§¼Æ
+# 2017~2018å¹´åŒ–æº¢é…¬ & å¹´åŒ–è®Šç•°æ•¸
 apply(ret_2017_2018[, 2:11], 2, mean)*250 - rf
 apply(ret_2017_2018[, 2:11], 2, var)*250
-################################# ¤õ»Lªk #################################
+################################# ç«è…¿æ³• #################################
 yr <- retData[, 2:11]*250*100
 v <- cov(retData[, 2:11]*100)*250
 #average<-apply(data,2,mean)*250
@@ -47,7 +47,7 @@ for(i in 1:length(mu)){
 
 efficient_frontier1 <- tibble(mu = mu, Var = sqrt(var.p), group = as.factor(c(rep(1, 2250), rep(2, 1751))))
 
-################################# ¤Á½uªk #################################
+################################# åˆ‡ç·šæ³• #################################
 
 risk_year <- sapply(retData[, 2:11],function(x) round(mean(x)*250,8))
 
@@ -73,27 +73,27 @@ for(i in 1:length(rf_vector))
 efficient_frontier2 <- filter(efficient_frontier2, miu<1 & miu>-1)
 # efficient_frontier2$group <- as.factor(c(rep(1, 10000), rep(2, 10000)))
 # efficient_frontier2 <- efficient_frontier2 %>% filter(Var <= (30/100)^2)
-################################# µe¹Ï #################################
+################################# ç•«åœ– #################################
 hq.sd <- (t(solve(V) %*% (f-0.0104) %*% (1/(t(f-0.0104) %*% solve(V) %*% as.matrix(e)))) %*% V %*% solve(V) %*% (f-0.0104) %*% (1/(t(f-0.0104) %*% solve(V) %*% as.matrix(e))))^0.5*100
 hq.mean <- as.vector(solve(V) %*% (f-0.0104) %*% (1/(t(f-0.0104) %*% solve(V) %*% as.matrix(e))))%*%(f-0.0104)*100
-# ¤õ»Lªkµe¹Ï
-plot(sqrt(var.p), mu,type = "l", xlab = "§ë¸ê²Õ¦X¼Ğ·Ç®t(%)", ylab="¹w´Á³ø¹S(%)"
-     , main="¤õ»Lªk®Ä²v«e½t(¦~¤Æ)", xlim=c(0,50), ylim=c(-100, 100))#xlim=c(20,40)
-points(x=sqrt(1/A), y=B/A, pch=19, col="red")      # CÂI
+# ç«è…¿æ³•ç•«åœ–
+plot(sqrt(var.p), mu,type = "l", xlab = "æŠ•è³‡çµ„åˆæ¨™æº–å·®(%)", ylab="é æœŸå ±é…¬(%)"
+     , main="ç«è…¿æ³•æ•ˆç‡å‰ç·£(å¹´åŒ–)", xlim=c(0,50), ylim=c(-100, 100))#xlim=c(20,40)
+points(x=sqrt(1/A), y=B/A, pch=19, col="red")      # Cé»
 points(x = 0, y = 1.04, pch=19, col="blue")        # Rf
-points(x = 13, y = 0, pch=19, col="blue")          # ZÂI
-points(x = hq.sd, y = hq.mean, pch=19, col="blue") # QÂI
-abline(a = 1.04, b=2.45)                           # ¤Á½u
+points(x = 13, y = 0, pch=19, col="blue")          # Zé»
+points(x = hq.sd, y = hq.mean, pch=19, col="blue") # Qé»
+abline(a = 1.04, b=2.45)                           # åˆ‡ç·š
 
 
-# ¤Á½uªkµe¹Ï
+# åˆ‡ç·šæ³•ç•«åœ–
 plot(x=as.vector((efficient_frontier2$Var)^(0.5)*100),y=as.vector(efficient_frontier2$miu*100), type = 'l',
-     xlab = "§ë¸ê²Õ¦X¼Ğ·Ç®t(%)", ylab="¹w´Á³ø¹S(%)", main="¤Á½uªk®Ä²v«e½t(¦~¤Æ)", xlim=c(0,50), ylim=c(-100, 100))
-points(x=sqrt(1/A), y=B/A,pch=19, col="red")        # CÂI
+     xlab = "æŠ•è³‡çµ„åˆæ¨™æº–å·®(%)", ylab="é æœŸå ±é…¬(%)", main="åˆ‡ç·šæ³•æ•ˆç‡å‰ç·£(å¹´åŒ–)", xlim=c(0,50), ylim=c(-100, 100))
+points(x=sqrt(1/A), y=B/A,pch=19, col="red")        # Cé»
 points(x = 0, y = 1.04, pch=19, col="blue")         # Rf
-points(x = 13, y = 0, pch=19, col="blue")           # ZÂI
-points(x = hq.sd, y = hq.mean, pch=19, col="blue")  # QÂI
-abline(a = 1.04, b=2.45)                            # ¤Á½u
+points(x = 13, y = 0, pch=19, col="blue")           # Zé»
+points(x = hq.sd, y = hq.mean, pch=19, col="blue")  # Qé»
+abline(a = 1.04, b=2.45)                            # åˆ‡ç·š
 
 # solve(V) %*% f / sum(solve(V) %*% (f-0.0104))
 # solve(V) %*% (f-0.0104) %*% (1/(t(f-0.0104) %*% solve(V) %*% as.matrix(e)))
