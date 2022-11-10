@@ -4,8 +4,8 @@ library(reshape2)
 library(ggplot2)
 library(data.table)
 
-setwd("E:\\NSYSU\\現投")
-stockData <- fread("10_stock.txt", sep = "\t")
+setwd("WORKDIR")
+stockData <- fread("FILE.txt", sep = "\t")
 colnames(stockData) <- c("code", "name", "date", "open", "high", "low", "close", "volume")
 
 retData <- stockData %>% 
@@ -14,7 +14,6 @@ retData <- stockData %>%
   na.omit() %>% 
   dcast(., formula = date ~ code, value.var = "dayLogRet")
 
-# 第一題
 # 無風險利率1.04%
 rf <- 0.0104
 ret_2016_2017 <- retData %>% filter(date >= 20161012, date <= 20171011)
