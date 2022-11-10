@@ -5,7 +5,7 @@ library(lubridate)
 library(quadprog)
 options(scipen = 999)
 
- setwd("C:/Users/weiha/Desktop/finance management/現投/hw03")
+ setwd("WORKDIR")
 # 
 # data<- data.table::fread("20181120.txt")
 # index<-data.table::fread("TAI50.csv")
@@ -33,7 +33,7 @@ data<-data %>% group_by(code)%>% filter(n()>=527)
 #-------------n()?need?-------------------#
 data$code<-as.character(data$code)
 data$date<-as.Date(as.character(data$date), format = "%Y%m%d")
-#####################Which Date###################################
+#####################Indicate Which Date###################################
 #dateofBiggestvalue<-ymd("20170601")
 
 Tracking_error<-function(dateofBiggestvalue,stock_num,traindate_start,traindate_end,testdate_start,testdate_end){
